@@ -119,6 +119,41 @@ button{
  font-weight:bold;color:#03150c;
 }
 .controls{display:flex;gap:10px;justify-content:center}
+ 
+/* UMI Touch Reactions */
+
+.robot {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.robot.touched {
+  animation: touchBounce .45s ease;
+}
+
+@keyframes touchBounce {
+  0% { transform: translateY(0) scale(1); }
+  40% { transform: translateY(-25px) scale(1.06); }
+  70% { transform: translateY(5px) scale(.97); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+.robot.touched .eye {
+  background: #b5ff00;
+  box-shadow: 0 0 30px #00ff55;
+}
+
+.robot.touched .mouth {
+  width: 28px;
+  height: 13px;
+  border-radius: 50%;
+}
+
+.robot.touched .chest {
+  box-shadow: 0 0 30px #00ff80;
+}
+
 </style>
 </head>
 <body>
@@ -193,6 +228,49 @@ function voice(){
  s.onend=()=>document.getElementById("status").textContent="● UMI is Ready!";
  speechSynthesis.speak(s);
 }
+ 
+let touchCount = 0;
+
+function react() {
+  const robot = document.querySelector(".robot");
+  const reply = document.getElementById("reply");
+  const status = document.getElementById("status");
+
+  touchCount++;
+
+  const reactions = [
+    "Hey! That tickles! 😆",
+    "Yay! You touched me! 💚",
+    "Hello! I am so happy! 😊",
+    "Again! I love your touch! 🤖"
+  ];
+
+  let answer = reactions[(touchCount - 1) % reactions.length];
+
+  reply.textContent = answer;
+  status.textContent = "● UMI is Happy!";
+
+  robot.classList.remove("touched");
+  void robot.offsetWidth;
+  robot.classList.add("touched");
+
+  lastReply = answer;
+
+  if ("speechSynthesis" in window) {
+    speechSynthesis.cancel();
+    let speech = new SpeechSynthesisUtterance(answer);
+    speech.lang = "en-IN";
+    speechSynthesis.speak(speech);
+  }
+
+  setTimeout(() => {
+    robot.classList.remove("touched");
+    status.textContent = "● UMI is Ready!";
+  }, 1200);
+}
+
+document.querySelector(".robot").addEventListener("click", react);
+ 
 </script>
 </body>
 </html>
