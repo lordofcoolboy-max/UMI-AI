@@ -1,129 +1,1022 @@
+
 <!DOCTYPE html>
-<html lang="ta">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080d19">
 <title>UMI AI Robot</title>
+
 <style>
-  body {
-    margin: 0;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(180deg, #e8fff3, #c9f7dd);
-    font-family: Arial, sans-serif;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --green: #00ff91;
+  --blue: #00d9ff;
+  --bg: #080d19;
+  --panel: #131e32;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at top, #20365a 0%, #080d19 65%);
+  color: white;
+  font-family: Arial, sans-serif;
+  overflow-x: hidden;
+}
+
+button, input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.app {
+  max-width: 480px;
+  margin: auto;
+  padding: 22px 16px 35px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: var(--green);
+  text-shadow: 0 0 18px #00ff9166;
+}
+
+.online {
+  font-size: 12px;
+  color: var(--green);
+  background: #00ff9115;
+  border: 1px solid #00ff9144;
+  padding: 8px 12px;
+  border-radius: 30px;
+}
+
+.subtitle {
+  margin-top: 8px;
+  color: #a8b8d3;
+  font-size: 14px;
+}
+
+.robot-area {
+  height: 380px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 12px;
+  perspective: 900px;
+}
+
+.platform {
+  position: absolute;
+  bottom: 20px;
+  width: 245px;
+  height: 38px;
+  border: 3px solid var(--blue);
+  border-radius: 50%;
+  box-shadow: 0 0 20px #00d9ff55;
+  transform: rotateX(15deg);
+}
+
+.platform::after {
+  content: "";
+  position: absolute;
+  inset: 6px 20px;
+  border: 1px solid #00ff91;
+  border-radius: 50%;
+}
+
+.robot {
+  position: relative;
+  width: 250px;
+  height: 315px;
+  transform-style: preserve-3d;
+  animation: idleFloat 3s ease-in-out infinite;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 2;
+}
+
+@keyframes idleFloat {
+  0%, 100% {
+    transform: translateY(0) rotateY(-5deg);
   }
-  h1 { color: #0a7d4f; margin-bottom: 10px; }
-  #robot {
-    width: 220px;
-    cursor: pointer;
-    transition: transform 0.2s;
+  50% {
+    transform: translateY(-9px) rotateY(5deg);
   }
-  #robot.bounce { animation: bounce 0.6s; }
-  #robot.shake  { animation: shake 0.5s; }
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    30% { transform: translateY(-40px); }
-    60% { transform: translateY(0); }
+}
+
+/* Head */
+
+.head {
+  position: absolute;
+  top: 12px;
+  left: 10px;
+  width: 230px;
+  height: 155px;
+  padding: 13px;
+  border-radius: 58px;
+  background: linear-gradient(145deg, #fff, #d4e0eb 55%, #8798ac);
+  box-shadow:
+    0 12px 30px #0008,
+    inset 0 3px 5px white,
+    0 0 25px #00ff9122;
+  transform: translateZ(15px);
+  z-index: 4;
+}
+
+.face {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 45px;
+  background: linear-gradient(145deg, #030710, #101b2a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 38px;
+  box-shadow: inset 0 0 20px #00ff9122;
+  overflow: hidden;
+}
+
+.eye {
+  position: relative;
+  width: 39px;
+  height: 49px;
+  background: var(--green);
+  border-radius: 45%;
+  box-shadow: 0 0 18px #00ff91;
+  transition: all .25s;
+  animation: blink 4.5s infinite;
+}
+
+.eye::after {
+  content: "";
+  position: absolute;
+  top: 7px;
+  left: 8px;
+  width: 9px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ffffffaa;
+}
+
+@keyframes blink {
+  0%, 91%, 100% {
+    transform: scaleY(1);
   }
-  @keyframes shake {
-    0%, 100% { transform: rotate(0); }
-    25% { transform: rotate(-8deg); }
-    75% { transform: rotate(8deg); }
+  95% {
+    transform: scaleY(.08);
   }
-  #bubble {
-    margin-top: 20px;
-    background: white;
-    padding: 12px 18px;
-    border-radius: 16px;
-    min-height: 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    max-width: 280px;
-    text-align: center;
-    font-size: 18px;
+}
+
+.mouth {
+  position: absolute;
+  bottom: 17px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 5px;
+  border-radius: 10px;
+  background: var(--green);
+  box-shadow: 0 0 10px var(--green);
+  transition: all .2s;
+}
+
+/* Body */
+
+.body-robot {
+  position: absolute;
+  top: 165px;
+  left: 43px;
+  width: 165px;
+  height: 120px;
+  border-radius: 34px;
+  background: linear-gradient(145deg, #fff, #c5d4e1 65%, #8d9db0);
+  box-shadow: 0 12px 25px #0008;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateZ(8px);
+}
+
+.chest {
+  width: 85px;
+  height: 65px;
+  border-radius: 23px;
+  background: #071426;
+  border: 2px solid #52657c;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--green);
+  font-size: 20px;
+  font-weight: bold;
+  box-shadow: inset 0 0 15px #00ff9122;
+}
+
+.chest small {
+  font-size: 9px;
+  margin-top: 4px;
+  letter-spacing: 2px;
+}
+
+/* Arms */
+
+.arm {
+  position: absolute;
+  top: 187px;
+  width: 38px;
+  height: 90px;
+  border-radius: 25px;
+  background: linear-gradient(90deg, #a9b8c8, #fff, #c0d0df);
+  transform-origin: top center;
+  box-shadow: 0 5px 10px #0005;
+  z-index: 3;
+}
+
+.arm-left {
+  left: 12px;
+  transform: rotate(12deg);
+}
+
+.arm-right {
+  right: 12px;
+  transform: rotate(-12deg);
+}
+
+/* Legs */
+
+.leg {
+  position: absolute;
+  top: 275px;
+  width: 54px;
+  height: 48px;
+  border-radius: 20px 20px 25px 25px;
+  background: linear-gradient(145deg, #fff, #a8bacb);
+  box-shadow: 0 5px 10px #0005;
+}
+
+.leg-left {
+  left: 53px;
+}
+
+.leg-right {
+  right: 53px;
+}
+
+/* Touch reaction */
+
+.robot.touched {
+  animation: bounce .55s ease;
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0) scale(1);
   }
+  35% {
+    transform: translateY(-28px) scale(1.07);
+  }
+  65% {
+    transform: translateY(5px) scale(.96);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+.robot.touched .eye {
+  background: #c4ff00;
+  box-shadow: 0 0 30px #c4ff00;
+  animation: none;
+  transform: scale(1.13);
+}
+
+.robot.touched .mouth {
+  width: 28px;
+  height: 12px;
+  border-radius: 0 0 18px 18px;
+}
+
+.robot.touched .arm-left {
+  animation: wave .55s ease;
+}
+
+.robot.touched .arm-right {
+  animation: waveRight .55s ease;
+}
+
+@keyframes wave {
+  0%, 100% {
+    transform: rotate(12deg);
+  }
+  50% {
+    transform: rotate(-48deg);
+  }
+}
+
+@keyframes waveRight {
+  0%, 100% {
+    transform: rotate(-12deg);
+  }
+  50% {
+    transform: rotate(48deg);
+  }
+}
+
+/* Expressions */
+
+.robot.happy .mouth {
+  width: 28px;
+  height: 13px;
+  border-radius: 0 0 18px 18px;
+}
+
+.robot.love .eye {
+  background: #ff66b2;
+  box-shadow: 0 0 25px #ff66b2;
+}
+
+.robot.love .mouth {
+  width: 22px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ff66b2;
+}
+
+.robot.sleep .eye {
+  height: 5px;
+  border-radius: 10px;
+  animation: none;
+}
+
+.robot.sleep .mouth {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* UI */
+
+.status {
+  text-align: center;
+  color: var(--green);
+  font-size: 13px;
+  margin: 4px 0 22px;
+}
+
+.section-title {
+  font-size: 17px;
+  margin-bottom: 12px;
+}
+
+.chat-panel {
+  background: linear-gradient(145deg, #18243a, #101827);
+  border: 1px solid #344863;
+  border-radius: 24px;
+  padding: 16px;
+  box-shadow: 0 15px 40px #0003;
+}
+
+.reply {
+  min-height: 45px;
+  padding: 8px;
+  color: #dce8ff;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+input {
+  width: 100%;
+  background: #080e1b;
+  border: 1px solid #344863;
+  border-radius: 14px;
+  color: white;
+  padding: 14px;
+  outline: none;
+  margin: 10px 0;
+}
+
+input:focus {
+  border-color: var(--green);
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.btn {
+  border: 0;
+  border-radius: 13px;
+  padding: 13px;
+  font-weight: bold;
+  background: linear-gradient(100deg, #00d878, #00e6b0);
+  color: #04150d;
+}
+
+.btn.secondary {
+  background: #243650;
+  color: #e5efff;
+  border: 1px solid #405574;
+}
+
+.btn:active {
+  transform: scale(.96);
+}
+
+.expression-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.expression-buttons button {
+  border: 1px solid #344863;
+  border-radius: 12px;
+  background: #172338;
+  color: white;
+  padding: 11px 2px;
+  font-size: 12px;
+}
+
+.expression-buttons button:active {
+  background: #00ff9122;
+}
+
+footer {
+  color: #71829c;
+  text-align: center;
+  font-size: 11px;
+  margin-top: 25px;
+}
+
+@media (max-width: 360px) {
+  .robot-area {
+    transform: scale(.9);
+    margin: -5px 0;
+  }
+}
 </style>
 </head>
+
 <body>
 
-<h1>UMI ♥</h1>
+<div class="app">
 
-<svg id="robot" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-  <!-- Antenna -->
-  <line x1="100" y1="20" x2="100" y2="45" stroke="#0a7d4f" stroke-width="6"/>
-  <circle id="antenna" cx="100" cy="15" r="9" fill="#ff5c5c"/>
-  <!-- Head -->
-  <rect x="40" y="45" width="120" height="110" rx="25" fill="#7ee0b0" stroke="#0a7d4f" stroke-width="4"/>
-  <!-- Eyes -->
-  <circle id="eyeL" cx="78" cy="95" r="12" fill="#063d28"/>
-  <circle id="eyeR" cx="122" cy="95" r="12" fill="#063d28"/>
-  <!-- Mouth -->
-  <path id="mouth" d="M75 125 Q100 140 125 125" stroke="#063d28" stroke-width="5" fill="none" stroke-linecap="round"/>
-  <!-- Cheeks -->
-  <circle cx="60" cy="120" r="7" fill="#ff9eb5" opacity="0.6"/>
-  <circle cx="140" cy="120" r="7" fill="#ff9eb5" opacity="0.6"/>
-</svg>
+<header>
+  <div class="logo">UMI AI</div>
+  <div class="online">● ONLINE</div>
+</header>
 
-<div id="bubble">Hi! Ennai thodu! 👋</div>
+<div class="subtitle">
+  Your Little AI Companion Robot 💚
+</div>
+
+<!-- ROBOT -->
+
+<div class="robot-area">
+
+  <div class="robot" id="robot">
+
+    <div class="head">
+      <div class="face">
+
+        <div class="eye"></div>
+        <div class="eye"></div>
+
+        <div class="mouth"></div>
+
+      </div>
+    </div>
+
+    <div class="arm arm-left"></div>
+    <div class="arm arm-right"></div>
+
+    <div class="body-robot">
+
+      <div class="chest">
+        UMI
+        <small>AI ROBOT</small>
+      </div>
+
+    </div>
+
+    <div class="leg leg-left"></div>
+    <div class="leg leg-right"></div>
+
+  </div>
+
+  <div class="platform"></div>
+
+</div>
+
+<div class="status" id="status">
+  ● UMI is Ready!
+</div>
+
+<!-- CHAT -->
+
+<div class="chat-panel">
+
+  <div class="section-title">
+    💬 Talk with UMI
+  </div>
+
+  <div class="reply" id="reply">
+    Hi! I'm UMI. Touch me! 👋
+  </div>
+
+  <input
+    id="message"
+    type="text"
+    placeholder="Type your message..."
+    autocomplete="off"
+  >
+
+  <div class="buttons">
+
+    <button class="btn" id="sendBtn">
+      Send 💬
+    </button>
+
+    <button class="btn secondary" id="voiceBtn">
+      🔊 Speak
+    </button>
+
+    <button class="btn secondary" id="micBtn">
+      🎤 Talk
+    </button>
+
+    <button class="btn secondary" id="stopBtn">
+      🔇 Stop
+    </button>
+
+  </div>
+
+</div>
+
+<!-- EXPRESSIONS -->
+
+<div class="expression-buttons">
+
+  <button data-expression="happy">😊 Happy</button>
+
+  <button data-expression="love">💚 Love</button>
+
+  <button data-expression="thinking">🤔 Think</button>
+
+  <button data-expression="sleep">😴 Sleep</button>
+
+</div>
+
+<footer>
+  UMI AI • Your Friendly Robot
+</footer>
+
+</div>
 
 <script>
-  const robot = document.getElementById('robot');
-  const bubble = document.getElementById('bubble');
-  const mouth = document.getElementById('mouth');
-  const antenna = document.getElementById('antenna');
+"use strict";
 
-  const messages = [
-    "Hello! Nalla irukeengala? 😊",
-    "Haha, idhu gudhugudhuppa irukku! 😄",
-    "Ennai thodathinga, enakku kooch varudhu! 😆",
-    "Vaanga, naan UMI! 💚",
-    "Innum oru thadava thodu! 🤖",
-    "Nalla naal! Ungalukku enna help vennum? ✨"
-  ];
+/* ELEMENTS */
 
-  const happyPath = "M75 125 Q100 150 125 125";
-  const neutralPath = "M75 125 Q100 140 125 125";
-  const surprisedPath = "M90 128 Q100 118 110 128 Q100 138 90 128";
+const robot = document.getElementById("robot");
+const reply = document.getElementById("reply");
+const statusText = document.getElementById("status");
+const messageInput = document.getElementById("message");
 
-  let count = 0;
+let lastReply = "Hi! I'm UMI. Touch me!";
+let touchCount = 0;
+let reactionTimer = null;
 
-  function speak(text) {
-    if ('speechSynthesis' in window) {
-      speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text.replace(/[^\p{L}\p{N}\s,.!?]/gu, ''));
-      u.lang = 'en-IN';
-      speechSynthesis.speak(u);
+/* REACTION TEXT */
+
+const touchReplies = [
+  "Hey! That tickles! 😆",
+  "Yay! You touched me! 💚",
+  "Hello! I am so happy! 😊",
+  "Again! I love your touch! 🤖",
+  "You are my friend! 💚",
+  "UMI is happy! ✨"
+];
+
+/* ROBOT REACTION */
+
+function reactToTouch() {
+
+  touchCount++;
+
+  const answer =
+    touchReplies[(touchCount - 1) % touchReplies.length];
+
+  lastReply = answer;
+
+  reply.textContent = answer;
+
+  statusText.textContent = "● UMI is Happy!";
+
+  robot.classList.remove(
+    "happy",
+    "love",
+    "sleep",
+    "touched"
+  );
+
+  void robot.offsetWidth;
+
+  robot.classList.add("touched");
+
+  clearTimeout(reactionTimer);
+
+  reactionTimer = setTimeout(() => {
+
+    robot.classList.remove("touched");
+
+    statusText.textContent = "● UMI is Ready!";
+
+  }, 1200);
+
+}
+
+/* TOUCH + CLICK */
+
+robot.addEventListener("click", reactToTouch);
+
+/* EXPRESSIONS */
+
+function setExpression(expression) {
+
+  robot.classList.remove(
+    "happy",
+    "love",
+    "sleep",
+    "touched"
+  );
+
+  if (expression === "happy") {
+
+    robot.classList.add("happy");
+
+    reply.textContent = "Yay! I'm so happy! 😊";
+
+    statusText.textContent = "● UMI is Happy!";
+
+  }
+
+  else if (expression === "love") {
+
+    robot.classList.add("love");
+
+    reply.textContent = "Sending you lots of love! 💚";
+
+    statusText.textContent = "● UMI is Loving!";
+
+  }
+
+  else if (expression === "thinking") {
+
+    reply.textContent = "Hmm... let me think! 🤔";
+
+    statusText.textContent = "● UMI is Thinking...";
+
+  }
+
+  else if (expression === "sleep") {
+
+    robot.classList.add("sleep");
+
+    reply.textContent = "Good night! 😴";
+
+    statusText.textContent = "● UMI is Sleeping!";
+
+  }
+
+  lastReply = reply.textContent;
+
+}
+
+/* EXPRESSION BUTTONS */
+
+document.querySelectorAll(
+  "[data-expression]"
+).forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    setExpression(
+      button.dataset.expression
+    );
+
+  });
+
+});
+
+/* LOCAL DEMO CHAT
+   This is not connected to an AI API yet.
+*/
+
+function sendMessage() {
+
+  const text = messageInput.value.trim();
+
+  if (!text) return;
+
+  const lower = text.toLowerCase();
+
+  let answer =
+    "I'm UMI! I am still learning. 💚";
+
+  if (
+    lower.includes("hello") ||
+    lower.includes("hi")
+  ) {
+
+    answer = "Hello! I'm UMI! 👋";
+
+  }
+
+  else if (
+    lower.includes("name")
+  ) {
+
+    answer = "My name is UMI AI Robot! 🤖";
+
+  }
+
+  else if (
+    lower.includes("how are you")
+  ) {
+
+    answer = "I'm happy to see you! 😊";
+
+  }
+
+  else if (
+    lower.includes("வணக்கம்")
+  ) {
+
+    answer = "வணக்கம்! நான் UMI. எப்படி இருக்கீங்க? 💚";
+
+  }
+
+  else if (
+    lower.includes("உன் பெயர்")
+  ) {
+
+    answer = "என் பெயர் UMI AI Robot! 🤖";
+
+  }
+
+  else if (
+    lower.includes("love")
+  ) {
+
+    answer = "You are my friend! 💚";
+
+    setExpression("love");
+
+  }
+
+  else if (
+    lower.includes("happy")
+  ) {
+
+    answer = "I'm very happy! 😊";
+
+    setExpression("happy");
+
+  }
+
+  lastReply = answer;
+
+  reply.textContent = answer;
+
+  messageInput.value = "";
+
+  statusText.textContent = "● UMI is Ready!";
+
+}
+
+/* SEND BUTTON */
+
+document.getElementById(
+  "sendBtn"
+).addEventListener("click", sendMessage);
+
+/* ENTER KEY */
+
+messageInput.addEventListener(
+  "keydown",
+  event => {
+
+    if (event.key === "Enter") {
+
+      sendMessage();
+
     }
+
+  }
+);
+
+/* SPEAK */
+
+function speakReply() {
+
+  if (!("speechSynthesis" in window)) {
+
+    statusText.textContent =
+      "Voice is not supported in this browser.";
+
+    return;
+
   }
 
-  function react(event) {
-    event.preventDefault();
-    count++;
+  speechSynthesis.cancel();
 
-    const msg = messages[count % messages.length];
-    bubble.textContent = msg;
+  const speech =
+    new SpeechSynthesisUtterance(lastReply);
 
-    // Random reaction animation
-    const anim = Math.random() < 0.5 ? 'bounce' : 'shake';
-    robot.classList.remove('bounce', 'shake');
-    void robot.offsetWidth; // restart animation
-    robot.classList.add(anim);
+  speech.lang =
+    /[\u0B80-\u0BFF]/.test(lastReply)
+      ? "ta-IN"
+      : "en-IN";
 
-    // Change mouth to happy and antenna color
-    mouth.setAttribute('d', happyPath);
-    antenna.setAttribute('fill', ['#ff5c5c', '#ffd23f', '#4dabf7', '#b197fc'][count % 4]);
+  speech.rate = 0.9;
 
-    setTimeout(() => mouth.setAttribute('d', neutralPath), 1200);
-    setTimeout(() => robot.classList.remove('bounce', 'shake'), 700);
+  speech.pitch = 1.1;
 
-    speak(msg);
+  speech.onstart = () => {
+
+    statusText.textContent =
+      "● UMI is Talking...";
+
+  };
+
+  speech.onend = () => {
+
+    statusText.textContent =
+      "● UMI is Ready!";
+
+  };
+
+  speechSynthesis.speak(speech);
+
+}
+
+/* VOICE BUTTON */
+
+document.getElementById(
+  "voiceBtn"
+).addEventListener("click", speakReply);
+
+/* MICROPHONE */
+
+let recognition = null;
+
+const SpeechRecognition =
+  window.SpeechRecognition ||
+  window.webkitSpeechRecognition;
+
+if (SpeechRecognition) {
+
+  recognition = new SpeechRecognition();
+
+  recognition.lang = "en-IN";
+
+  recognition.continuous = false;
+
+  recognition.interimResults = false;
+
+  recognition.onstart = () => {
+
+    statusText.textContent =
+      "● UMI is Listening...";
+
+  };
+
+  recognition.onresult = event => {
+
+    const transcript =
+      event.results[0][0].transcript;
+
+    messageInput.value = transcript;
+
+    sendMessage();
+
+    speakReply();
+
+  };
+
+  recognition.onerror = () => {
+
+    statusText.textContent =
+      "● Microphone unavailable";
+
+  };
+
+  recognition.onend = () => {
+
+    if (
+      statusText.textContent.includes("Listening")
+    ) {
+
+      statusText.textContent =
+        "● UMI is Ready!";
+
+    }
+
+  };
+
+}
+
+/* MICROPHONE BUTTON */
+
+document.getElementById(
+  "micBtn"
+).addEventListener("click", () => {
+
+  if (!recognition) {
+
+    statusText.textContent =
+      "Use Chrome for microphone support.";
+
+    return;
+
   }
 
-  robot.addEventListener('pointerdown', react);
+  try {
+
+    recognition.start();
+
+  }
+
+  catch (error) {
+
+    statusText.textContent =
+      "● Please try microphone again.";
+
+  }
+
+});
+
+/* STOP BUTTON */
+
+document.getElementById(
+  "stopBtn"
+).addEventListener("click", () => {
+
+  if ("speechSynthesis" in window) {
+
+    speechSynthesis.cancel();
+
+  }
+
+  if (recognition) {
+
+    try {
+
+      recognition.stop();
+
+    }
+
+    catch (error) {}
+
+  }
+
+  statusText.textContent =
+    "● UMI is Ready!";
+
+});
+
+/* INITIAL STATE */
+
+statusText.textContent =
+  "● UMI is Ready!";
+
 </script>
 
 </body>
