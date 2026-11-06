@@ -1,276 +1,130 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ta">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>UMI AI Robot</title>
 <style>
-*{box-sizing:border-box}
-body{
- margin:0;min-height:100vh;
- background:radial-gradient(circle at 50% 35%,#263b63,#090d1c 75%);
- color:white;font-family:Arial;
- display:flex;justify-content:center;
- align-items:center;text-align:center;
- overflow-x:hidden;
-}
-.app{width:100%;max-width:430px;padding:20px}
-h1{color:#00ff91;font-size:38px;text-shadow:0 0 20px #00ff91}
-.sub{color:#aab6d3}
-.scene{height:390px;position:relative;
- display:flex;justify-content:center;align-items:center;
- perspective:800px}
-.robot{
- position:relative;width:240px;height:320px;
- animation:float 3s ease-in-out infinite;
- transform-style:preserve-3d;
-}
-@keyframes float{
- 0%,100%{transform:translateY(0) rotateY(-5deg)}
- 50%{transform:translateY(-13px) rotateY(5deg)}
-}
-.head{
- position:absolute;top:15px;left:5px;
- width:230px;height:155px;
- background:linear-gradient(145deg,#fff,#aab9c8);
- border-radius:58px;padding:14px;
- box-shadow:0 12px 30px #0008,0 0 25px #00ff8055;
- z-index:3;
-}
-.face{
- height:100%;background:#030711;border-radius:45px;
- display:flex;align-items:center;justify-content:center;
- gap:40px;position:relative;
- box-shadow:inset 0 0 20px #00ff5533;
-}
-.eye{
- width:40px;height:48px;background:#00ff55;
- border-radius:45%;box-shadow:0 0 18px #00ff55;
- animation:blink 4s infinite;
-}
-@keyframes blink{
- 0%,90%,100%{transform:scaleY(1)}
- 95%{transform:scaleY(.08)}
-}
-.mouth{
- position:absolute;bottom:19px;
- width:17px;height:7px;background:#00ff75;
- border-radius:50%;
- box-shadow:0 0 10px #00ff75;
-}
-.body{
- position:absolute;top:165px;left:38px;
- width:165px;height:135px;
- border-radius:35px;
- background:linear-gradient(120deg,#fff,#b7c7d4);
- box-shadow:0 12px 20px #0008;
- display:flex;justify-content:center;
- align-items:center;
-}
-.chest{
- background:#071326;color:#00ff77;
- border-radius:20px;padding:15px;
- font-size:23px;font-weight:bold;
- box-shadow:0 0 18px #00ff5555;
-}
-.arm{
- position:absolute;top:190px;
- width:42px;height:100px;
- background:linear-gradient(90deg,#fff,#b6c7d5);
- border-radius:25px;
- transform-origin:top center;
-}
-.left{left:8px;animation:wave 1.8s ease-in-out infinite}
-.right{right:8px;transform:rotate(-12deg)}
-@keyframes wave{
- 0%,100%{transform:rotate(15deg)}
- 50%{transform:rotate(-45deg)}
-}
-.leg{
- position:absolute;top:285px;
- width:57px;height:42px;
- background:linear-gradient(145deg,#fff,#aebdca);
- border-radius:20px 20px 25px 25px;
-}
-.leg1{left:42px}
-.leg2{right:42px}
-.platform{
- position:absolute;bottom:4px;
- width:280px;height:42px;
- border:4px solid #00eaff;
- border-radius:50%;
- box-shadow:0 0 20px #00eaff;
-}
-.status{color:#00ff91;margin:10px}
-.chat{
- background:#151f36;border:1px solid #344b70;
- border-radius:20px;padding:16px;
-}
-#reply{min-height:35px;margin:10px}
-input{
- width:100%;padding:14px;border-radius:12px;
- border:1px solid #405477;background:#080f20;
- color:white;margin:10px 0;
-}
-button{
- border:0;border-radius:12px;padding:13px;
- background:linear-gradient(90deg,#00d878,#00e9ba);
- font-weight:bold;color:#03150c;
-}
-.controls{display:flex;gap:10px;justify-content:center}
- 
-/* UMI Touch Reactions */
-
-.robot {
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-
-.robot.touched {
-  animation: touchBounce .45s ease;
-}
-
-@keyframes touchBounce {
-  0% { transform: translateY(0) scale(1); }
-  40% { transform: translateY(-25px) scale(1.06); }
-  70% { transform: translateY(5px) scale(.97); }
-  100% { transform: translateY(0) scale(1); }
-}
-
-.robot.touched .eye {
-  background: #b5ff00;
-  box-shadow: 0 0 30px #00ff55;
-}
-
-.robot.touched .mouth {
-  width: 28px;
-  height: 13px;
-  border-radius: 50%;
-}
-
-.robot.touched .chest {
-  box-shadow: 0 0 30px #00ff80;
-}
-
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #e8fff3, #c9f7dd);
+    font-family: Arial, sans-serif;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  h1 { color: #0a7d4f; margin-bottom: 10px; }
+  #robot {
+    width: 220px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  #robot.bounce { animation: bounce 0.6s; }
+  #robot.shake  { animation: shake 0.5s; }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-40px); }
+    60% { transform: translateY(0); }
+  }
+  @keyframes shake {
+    0%, 100% { transform: rotate(0); }
+    25% { transform: rotate(-8deg); }
+    75% { transform: rotate(8deg); }
+  }
+  #bubble {
+    margin-top: 20px;
+    background: white;
+    padding: 12px 18px;
+    border-radius: 16px;
+    min-height: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-width: 280px;
+    text-align: center;
+    font-size: 18px;
+  }
 </style>
 </head>
 <body>
-<div class="app">
-<h1>UMI AI</h1>
-<div class="sub">Your Personal AI Robot 💚</div>
 
-<div class="scene">
- <div class="robot">
-  <div class="head">
-   <div class="face">
-    <div class="eye"></div>
-    <div class="eye"></div>
-    <div class="mouth"></div>
-   </div>
-  </div>
-  <div class="arm left"></div>
-  <div class="arm right"></div>
-  <div class="body">
-   <div class="chest">UMI ♥</div>
-  </div>
-  <div class="leg leg1"></div>
-  <div class="leg leg2"></div>
- </div>
- <div class="platform"></div>
-</div>
+<h1>UMI ♥</h1>
 
-<div class="status" id="status">● UMI is Ready!</div>
+<svg id="robot" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Antenna -->
+  <line x1="100" y1="20" x2="100" y2="45" stroke="#0a7d4f" stroke-width="6"/>
+  <circle id="antenna" cx="100" cy="15" r="9" fill="#ff5c5c"/>
+  <!-- Head -->
+  <rect x="40" y="45" width="120" height="110" rx="25" fill="#7ee0b0" stroke="#0a7d4f" stroke-width="4"/>
+  <!-- Eyes -->
+  <circle id="eyeL" cx="78" cy="95" r="12" fill="#063d28"/>
+  <circle id="eyeR" cx="122" cy="95" r="12" fill="#063d28"/>
+  <!-- Mouth -->
+  <path id="mouth" d="M75 125 Q100 140 125 125" stroke="#063d28" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <!-- Cheeks -->
+  <circle cx="60" cy="120" r="7" fill="#ff9eb5" opacity="0.6"/>
+  <circle cx="140" cy="120" r="7" fill="#ff9eb5" opacity="0.6"/>
+</svg>
 
-<div class="chat">
- <div id="reply">Hi! I'm UMI. Nice to meet you! 👋</div>
- <input id="message" placeholder="Talk with UMI...">
- <div class="controls">
-  <button onclick="send()">Send</button>
-  <button onclick="voice()">🔊 Speak</button>
- </div>
-</div>
-</div>
+<div id="bubble">Hi! Ennai thodu! 👋</div>
 
 <script>
-let lastReply="Hello! I am UMI. How can I help you?";
+  const robot = document.getElementById('robot');
+  const bubble = document.getElementById('bubble');
+  const mouth = document.getElementById('mouth');
+  const antenna = document.getElementById('antenna');
 
-function send(){
- let input=document.getElementById("message");
- let t=input.value.trim().toLowerCase();
- if(!t)return;
-
- let answer="That is interesting! Tell me more.";
-
- if(t.includes("hello")||t.includes("hi"))
- answer="Hello! I am UMI. Nice to meet you!";
- else if(t.includes("name"))
- answer="My name is UMI AI!";
- else if(t.includes("வணக்கம்"))
- answer="வணக்கம்! நான் UMI. எப்படி இருக்கிறீர்கள்?";
- else if(t.includes("how are you"))
- answer="I am happy! Thank you!";
- else if(t.includes("bye"))
- answer="Goodbye! See you again!";
-
- lastReply=answer;
- document.getElementById("reply").textContent=answer;
- document.getElementById("status").textContent="● UMI is talking!";
- input.value="";
-}
-
-function voice(){
- if(!window.speechSynthesis)return;
- speechSynthesis.cancel();
- let s=new SpeechSynthesisUtterance(lastReply);
- s.lang=/[\u0B80-\u0BFF]/.test(lastReply)?"ta-IN":"en-IN";
- s.onend=()=>document.getElementById("status").textContent="● UMI is Ready!";
- speechSynthesis.speak(s);
-}
- 
-let touchCount = 0;
-
-function react() {
-  const robot = document.querySelector(".robot");
-  const reply = document.getElementById("reply");
-  const status = document.getElementById("status");
-
-  touchCount++;
-
-  const reactions = [
-    "Hey! That tickles! 😆",
-    "Yay! You touched me! 💚",
-    "Hello! I am so happy! 😊",
-    "Again! I love your touch! 🤖"
+  const messages = [
+    "Hello! Nalla irukeengala? 😊",
+    "Haha, idhu gudhugudhuppa irukku! 😄",
+    "Ennai thodathinga, enakku kooch varudhu! 😆",
+    "Vaanga, naan UMI! 💚",
+    "Innum oru thadava thodu! 🤖",
+    "Nalla naal! Ungalukku enna help vennum? ✨"
   ];
 
-  let answer = reactions[(touchCount - 1) % reactions.length];
+  const happyPath = "M75 125 Q100 150 125 125";
+  const neutralPath = "M75 125 Q100 140 125 125";
+  const surprisedPath = "M90 128 Q100 118 110 128 Q100 138 90 128";
 
-  reply.textContent = answer;
-  status.textContent = "● UMI is Happy!";
+  let count = 0;
 
-  robot.classList.remove("touched");
-  void robot.offsetWidth;
-  robot.classList.add("touched");
-
-  lastReply = answer;
-
-  if ("speechSynthesis" in window) {
-    speechSynthesis.cancel();
-    let speech = new SpeechSynthesisUtterance(answer);
-    speech.lang = "en-IN";
-    speechSynthesis.speak(speech);
+  function speak(text) {
+    if ('speechSynthesis' in window) {
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text.replace(/[^\p{L}\p{N}\s,.!?]/gu, ''));
+      u.lang = 'en-IN';
+      speechSynthesis.speak(u);
+    }
   }
 
-  setTimeout(() => {
-    robot.classList.remove("touched");
-    status.textContent = "● UMI is Ready!";
-  }, 1200);
-}
+  function react(event) {
+    event.preventDefault();
+    count++;
 
-document.querySelector(".robot").addEventListener("click", react);
- 
+    const msg = messages[count % messages.length];
+    bubble.textContent = msg;
+
+    // Random reaction animation
+    const anim = Math.random() < 0.5 ? 'bounce' : 'shake';
+    robot.classList.remove('bounce', 'shake');
+    void robot.offsetWidth; // restart animation
+    robot.classList.add(anim);
+
+    // Change mouth to happy and antenna color
+    mouth.setAttribute('d', happyPath);
+    antenna.setAttribute('fill', ['#ff5c5c', '#ffd23f', '#4dabf7', '#b197fc'][count % 4]);
+
+    setTimeout(() => mouth.setAttribute('d', neutralPath), 1200);
+    setTimeout(() => robot.classList.remove('bounce', 'shake'), 700);
+
+    speak(msg);
+  }
+
+  robot.addEventListener('pointerdown', react);
 </script>
+
 </body>
 </html>
